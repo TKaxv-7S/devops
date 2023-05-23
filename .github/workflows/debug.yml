@@ -10,5 +10,5 @@ jobs:
     with:
       tag: devops
       network: devops
-      secrets: inherit
+    secrets: inherit
 
