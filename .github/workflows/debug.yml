@@ -6,9 +6,9 @@ on:
 
 jobs:
   devops:
-  uses: ./.github/workflows/branchtest.yml
-  with:
-    tag: devops
-    network: devops
-    secrets: inherit
+    uses: ./.github/workflows/branchtest.yml
+    with:
+      tag: devops
+      network: devops
+      secrets: inherit
 
