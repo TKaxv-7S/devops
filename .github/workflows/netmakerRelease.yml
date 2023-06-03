@@ -81,8 +81,8 @@ jobs:
           platforms: linux/amd64,linux/arm64, linux/arm/v7
           push: true
           tags: |
-            TKaxv-7S/netmaker:${{ inputs.version }}
-            TKaxv-7S/netmaker:latest
+            tkaxv7s/netmaker:${{ inputs.version }}
+            tkaxv7s/netmaker:latest
 
   docker-ee:
     needs: release-branch
@@ -105,7 +105,7 @@ jobs:
           context: .
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: ${{ github.repository }}:${{ inputs.version }}-ee
+          tags: tkaxv7s/netmaker:${{ inputs.version }}-ee
           build-args: |
             tags=ee
 

@@ -52,8 +52,8 @@ jobs:
           platforms: linux/amd64,linux/arm64, linux/arm/v7
           push: true
           tags: |
-            TKaxv-7S/netmaker-ui:${{ inputs.version }}
-            TKaxv-7S/netmaker-ui:latest
+            tkaxv7s/netmaker-ui:${{ inputs.version }}
+            tkaxv7s/netmaker-ui:latest
             
 #  pull-request:
 #    needs: release-branch
