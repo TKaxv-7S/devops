@@ -13,7 +13,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          repository: gravitl/netmaker-ui-2
+          repository: TKaxv-7S/netmaker-ui-2
           ref: develop
       - name: Setup git
         run: |
@@ -33,7 +33,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          repository: gravitl/netmaker-ui-2
+          repository: TKaxv-7S/netmaker-ui-2
           ref: release-${{ inputs.version }}
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v2
@@ -52,20 +52,20 @@ jobs:
           platforms: linux/amd64,linux/arm64, linux/arm/v7
           push: true
           tags: |
-            gravitl/netmaker-ui:${{ inputs.version }}
-            gravitl/netmaker-ui:latest
+            TKaxv-7S/netmaker-ui:${{ inputs.version }}
+            TKaxv-7S/netmaker-ui:latest
             
-  pull-request:
-    needs: release-branch
-    runs-on: ubuntu-latest
-    steps:
-      - name: create pr
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh api --method POST \
-          -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28'  \
-          /repos/gravitl/netmaker-ui-2/pulls \
-          -f title='${{ inputs.version }}' \
-          -f head='release-${{ inputs.version }}' \
-          -f base="master"
+#  pull-request:
+#    needs: release-branch
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: create pr
+#        env:
+#          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        run: |
+#          gh api --method POST \
+#          -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28'  \
+#          /repos/TKaxv-7S/netmaker-ui-2/pulls \
+#          -f title='${{ inputs.version }}' \
+#          -f head='release-${{ inputs.version }}' \
+#          -f base="main"
