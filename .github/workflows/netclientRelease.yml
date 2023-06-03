@@ -66,23 +66,23 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  freebsd-headless:
-    runs-on: ubuntu-latest
-    needs: release-branch
-    steps:
-      - name: build freebsd
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: freebsd.clustercat.com
-          username: freebsd
-          key: ${{ secrets.TESTING_SSH_KEY }}
-          script: |
-            cd netclient
-            git fetch
-            git switch release-${{ github.event.inputs.version }}
-            git restore .
-            git pull
-            go build .
+#  freebsd-headless:
+#    runs-on: ubuntu-latest
+#    needs: release-branch
+#    steps:
+#      - name: build freebsd
+#        uses: appleboy/ssh-action@v0.1.10
+#        with:
+#          host: freebsd.clustercat.com
+#          username: freebsd
+#          key: ${{ secrets.TESTING_SSH_KEY }}
+#          script: |
+#            cd netclient
+#            git fetch
+#            git switch release-${{ github.event.inputs.version }}
+#            git restore .
+#            git pull
+#            go build .
 #      - name: setup ssh
 #        run: |
 #          mkdir -p ~/.ssh/
@@ -99,14 +99,14 @@ jobs:
 #      - name: get freebsd binary
 #        run: |
 #          scp freebsd@freebsd.clustercat.com:~/netclient/netclient /tmp/
-      - name: upload freebsd to release
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: /tmp/netclient
-          tag: ${{ github.event.inputs.version }}
-          overwrite: true
-          asset_name: netclient-freebsd-amd64
+#      - name: upload freebsd to release
+#        uses: svenstaro/upload-release-action@v2
+#        with:
+#          repo_token: ${{ secrets.GITHUB_TOKEN }}
+#          file: /tmp/netclient
+#          tag: ${{ github.event.inputs.version }}
+#          overwrite: true
+#          asset_name: netclient-freebsd-amd64
 
   docker:
     needs: release-branch
