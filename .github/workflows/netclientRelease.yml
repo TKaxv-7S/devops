@@ -143,6 +143,7 @@ jobs:
           cd gui
           go install github.com/wailsapp/wails/v2/cmd/wails@latest 
           ~/go/bin/wails build -skipbindings
+          cp build/bin/netclient-2-0.app/Contents/MacOS/netclient-2-0 /tmp/netclient_darwin_amd64
       - name: upload darwin/amd to release
         uses: svenstaro/upload-release-action@v2
         with:
