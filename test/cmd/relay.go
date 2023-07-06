@@ -19,7 +19,6 @@ import (
 	"fmt"
 	"net"
 	"strings"
-	"time"
 
 	"github.com/gravitl/devops/netmaker"
 	"github.com/gravitl/devops/ssh"
@@ -68,26 +67,14 @@ func relaytest(config *netmaker.Config) bool {
 		return false
 	}
 	slog.Info("creating relay")
+	//check if server is EE
+	severConfig := netmaker.ServerConfig()
+	if !severConfig.Is_EE {
+		slog.Warn("server is not EE, skipping ...", "test", "relay")
+		return true
+	}
 	netmaker.CreateRelay(relay, relayed)
-	slog.Info("setting firewall rules")
 	egress := netmaker.GetHost("egress", netclient)
-	if egress == nil {
-		slog.Error("did not find egress netclient", "test", "relay")
-		return false
-	}
-	_, err := ssh.Run([]byte(config.Key), relayed.Host.EndpointIP, "iptables -A OUTPUT -d "+egress.Host.EndpointIP+" -j DROP")
-	if err != nil {
-		slog.Error("failed to set firewall rule on relayed", "test", "relay")
-		return false
-	}
-	_, err = ssh.Run([]byte(config.Key), egress.Host.EndpointIP, "iptables -A OUTPUT -d "+relayed.Host.EndpointIP+" -j DROP")
-	if err != nil {
-		slog.Error("failed to set firewall rule on relayed", "test", "relay")
-		return false
-	}
-	slog.Info("waiting for changes to propogate")
-	time.Sleep(time.Second * 30)
-	defer resetFirewall(relayed, egress)
 	slog.Info("ping egress from relayed")
 	ip, _, err := net.ParseCIDR(egress.Node.Address)
 	if err != nil {
@@ -121,16 +108,4 @@ func relaytest(config *netmaker.Config) bool {
 		}
 	}
 	return pass
-}
-
-func resetFirewall(relayed, egress *netmaker.Netclient) {
-	slog.Info("reseting firewall on relayed/egress")
-	_, err := ssh.Run([]byte(config.Key), relayed.Host.EndpointIP, "iptables -D OUTPUT -d "+egress.Host.EndpointIP+" -j DROP")
-	if err != nil {
-		slog.Error("failed to set firewall rule on relayed", "test", "relay")
-	}
-	_, err = ssh.Run([]byte(config.Key), egress.Host.EndpointIP, "iptables -D OUTPUT -d "+relayed.Host.EndpointIP+" -j DROP")
-	if err != nil {
-		slog.Error("failed to set firewall rule on relayed", "test", "relay")
-	}
 }

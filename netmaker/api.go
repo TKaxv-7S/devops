@@ -33,8 +33,7 @@ type EnvMap map[string]string
 
 type Config struct {
 	Network            string
-	CleanUp            bool
-	CleanUpTimeout     int
+	Server             string
 	DigitalOcean_Token string
 	Tag                string
 	Api                string
@@ -49,8 +48,8 @@ func SetCxt(endpoint, masterkey string) {
 	ctx.MasterKey = masterkey
 }
 
-func DeleteRelay(id string) {
-	api := "/api/hosts/" + id + "/relay"
+func DeleteRelay(id, network string) {
+	api := "/api/nodes/" + network + "/" + id + "/deleterelay"
 	callapi[models.ApiHost](http.MethodDelete, api, nil)
 }
 
@@ -167,22 +166,22 @@ func AddAdmin(url string) error {
 	return nil
 }
 
-func GetToken(net, url string, uses int) (string, error) {
-	key := models.AccessKey{}
-	key.Uses = uses
-	response, err := Api(key, http.MethodPost, url+"/api/networks/"+net+"/keys", "secretkey")
-	if err != nil {
-		return "", err
-	}
-	defer response.Body.Close()
-	if response.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("error retriving token: status %s", response.Status)
-	}
-	if err := json.NewDecoder(response.Body).Decode(&key); err != nil {
-		return "", err
-	}
-	return key.AccessString, nil
-}
+// func GetToken(net, url string, uses int) (string, error) {
+// 	key := models.AccessKey{}
+// 	key.Uses = uses
+// 	response, err := Api(key, http.MethodPost, url+"/api/networks/"+net+"/keys", "secretkey")
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	defer response.Body.Close()
+// 	if response.StatusCode != http.StatusOK {
+// 		return "", fmt.Errorf("error retriving token: status %s", response.Status)
+// 	}
+// 	if err := json.NewDecoder(response.Body).Decode(&key); err != nil {
+// 		return "", err
+// 	}
+// 	return key.AccessString, nil
+// }
 
 // func CreateRelay(name, network, relayrange string) error {
 // 	var response *http.Response

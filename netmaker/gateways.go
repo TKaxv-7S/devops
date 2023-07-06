@@ -52,10 +52,11 @@ func CreateEgress(client Netclient, ranges []string) *models.ApiNode {
 }
 
 func CreateRelay(relay, relayed *Netclient) {
-	data := models.HostRelayRequest{
-		HostID:       relay.Host.ID,
-		RelayedHosts: []string{relayed.Host.ID},
+	data := models.RelayRequest{
+		NodeID:       relay.Node.ID,
+		NetID:        relay.Node.Network,
+		RelayedNodes: []string{relayed.Node.ID},
 	}
 	slog.Debug("debuging", "data", data)
-	callapi[models.ApiHost](http.MethodPost, "/api/hosts/"+relay.Host.ID+"/relay", data)
+	callapi[models.ApiHost](http.MethodPost, "/api/nodes/"+relay.Node.Network+"/"+relay.Node.ID+"/createrelay", data)
 }
