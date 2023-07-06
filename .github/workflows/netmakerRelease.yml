@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: TKaxv-7S/netmaker
-          ref: develop
+          ref: main_tk
       - name: setup go
         uses: actions/setup-go@v4
         with:
