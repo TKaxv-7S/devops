@@ -95,3 +95,59 @@ jobs:
             tkaxv7s/netclient:${{ inputs.version }}
             tkaxv7s/netclient:latest
 
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: TKaxv-7S/netclient
+          ref: release-${{ inputs.version }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 19
+      - uses: actions/setup-go@v4
+        with:
+          go-version: 1.19
+      - name: build gui
+        run: |
+          go build .
+          cd gui/frontend
+          npm ci
+          npm run build
+          cd ..
+          go build -tags desktop,production -ldflags "-w -s -H windowsgui"
+      - name: upload windows to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: netclient.exe
+          tag: ${{ github.event.inputs.version }}
+          overwrite: true
+          asset_name: netclient-windows-amd64.exe
+
+  darwin:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: TKaxv-7S/netclient
+          ref: release-${{ inputs.version }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 19
+      - uses: actions/setup-go@v4
+        with:
+          go-version: 1.19
+      - run: |
+          go build .
+          cd gui
+          go install github.com/wailsapp/wails/v2/cmd/wails@latest 
+          ~/go/bin/wails build -skipbindings
+      - name: upload darwin/amd to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: /tmp/netclient_darwin_amd64
+          tag: ${{ github.event.inputs.version }}
+          overwrite: true
+          asset_name: netclient-darwin-amd64
