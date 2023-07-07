@@ -115,7 +115,12 @@ jobs:
           npm ci
           npm run build
           cd ..
-          go build -tags desktop,production -ldflags "-w -s -H windowsgui"
+          go generate
+          go build -ldflags "-w -s -H windowsgui" -o ../ncutils/windowsdaemon/gui.exe
+          cd ..
+          go install github.com/josephspurrier/goversioninfo/cmd/goversioninfo@latest
+          go generate
+          go build -ldflags "-w -s"
       - name: upload windows to release
         uses: svenstaro/upload-release-action@v2
         with:
