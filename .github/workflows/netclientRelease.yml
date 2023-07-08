@@ -94,6 +94,8 @@ jobs:
           tags: |
             tkaxv7s/netclient:${{ inputs.version }}
             tkaxv7s/netclient:latest
+          build-args: |
+            ver=${{ inputs.version }}
 
   windows:
     runs-on: windows-latest
